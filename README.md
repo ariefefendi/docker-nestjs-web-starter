@@ -298,3 +298,13 @@ If you rename the MySQL service (`kazuya-mysql`), also update `DB_HOST` in `.env
 | Hot reload does not work on Windows/macOS         | Polling is already enabled (`CHOKIDAR_USEPOLLING`). Make sure the project folder is on a drive shared with Docker.    |
 | Page looks broken / unstyled                      | Frontend libraries are loaded from CDNs; make sure you have internet access.                                          |
 | Changes in `template/` do not appear              | `src/` already exists. Edit in `src/`, or delete `src/` and rebuild to scaffold again.                                |
+
+---
+
+## Credits
+
+**Gin MVVM Docker Starter Kit**
+
+Developed by: **Arif Efendi**
+
+Copyright © 2021–2026 Arif Efendi

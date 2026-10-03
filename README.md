@@ -303,7 +303,7 @@ If you rename the MySQL service (`kazuya-mysql`), also update `DB_HOST` in `.env
 
 ## Credits
 
-**Gin MVVM Docker Starter Kit**
+**NestJS MVC Docker Starter Kit**
 
 Developed by: **Arif Efendi**
 

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ Title }} · {{ AppName }}</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+  <div class="container" style="max-width: 400px; margin-top: 12vh;">
+    <div class="card shadow-sm">
+      <div class="card-body p-4">
+        <h1 class="h4 mb-3">{{ AppName }}</h1>
+
+        {% if error %}<div class="alert alert-danger py-2">{{ error }}</div>{% endif %}
+
+        <form method="post" action="/login">
+          <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" name="email" class="form-control" value="{{ email }}" required autofocus>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input type="password" name="password" class="form-control" required>
+          </div>
+          <button class="btn btn-primary w-100" type="submit">Login</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

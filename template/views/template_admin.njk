@@ -1,0 +1,104 @@
+{#
+  views/template_admin.njk  ->  setara resources/views/template_admin.blade.php
+
+  INI LAYOUT PENGGANTI (stub) supaya project langsung jalan:
+  Bootstrap 5 + jQuery + DataTables + Knockout + knockout.mapping (via CDN)
+  dan objek global `model` yang dipakai UnitsView.
+  Ganti isinya dengan template_admin asli Anda (Hope UI, dll). Pastikan:
+    - library di atas dimuat SEBELUM {% block content %}
+    - objek `model` tersedia (role, Processing, activetab, permission,
+      formValidation, resetFormValidation) + fungsi alert_InValidField()
+    - ko.applyBindings(model) dipanggil SETELAH konten
+#}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ Title }} · {{ AppName }}</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap5.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/boxicons/2.1.4/css/boxicons.min.css">
+  <style>
+    body { background: #f5f6f8; }
+    .content-inner { padding-top: 1.5rem; padding-bottom: 1.5rem; }
+    .permission-disabled { opacity: .5; pointer-events: none; }
+    #processing {
+      display: none; position: fixed; inset: 0; z-index: 2000;
+      background: rgba(255,255,255,.6); align-items: center; justify-content: center;
+    }
+  </style>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.5.1/knockout-latest.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout.mapping/2.4.1/knockout.mapping.min.js"></script>
+
+  <script>
+    // ---- objek global `model` (dipakai view) ----
+    var model = {
+      role: {{ (rolePrefix or '') | dump | safe }},   // prefix URL, mis. "/admin"
+
+      Processing: function (on) {
+        document.getElementById('processing').style.display = on ? 'flex' : 'none';
+      },
+
+      // 0 = tab Form, 1 = tab List
+      activetab: function (i) {
+        var tabs = document.querySelectorAll('#tabnavform .nav-link');
+        if (tabs[i]) bootstrap.Tab.getOrCreateInstance(tabs[i]).show();
+      },
+
+      // Ganti dengan cek permission role yang sebenarnya.
+      permission: function (action) { return true; },
+
+      resetFormValidation: function (selector) {
+        $(selector).find('.is-invalid').removeClass('is-invalid');
+      },
+
+      // true jika semua input [required] terisi
+      formValidation: function (selector) {
+        var ok = true;
+        $(selector).find('[required]').each(function () {
+          var empty = !String($(this).val() || '').trim();
+          $(this).toggleClass('is-invalid', empty);
+          if (empty) ok = false;
+        });
+        return ok;
+      }
+    };
+
+    function alert_InValidField() {
+      alert('Mohon lengkapi field yang wajib diisi.');
+    }
+  </script>
+</head>
+<body>
+
+  <nav class="navbar navbar-expand bg-white border-bottom px-3">
+    <a class="navbar-brand" href="/">{{ AppName }}</a>
+    <ul class="navbar-nav me-auto">
+      <li class="nav-item"><a class="nav-link" href="{{ rolePrefix }}/units">Units</a></li>
+    </ul>
+    {% if user %}
+    <span class="me-3 text-muted">{{ user.name }} ({{ user.role }})</span>
+    <form method="post" action="/logout" class="m-0">
+      <button class="btn btn-sm btn-outline-secondary" type="submit">Logout</button>
+    </form>
+    {% endif %}
+  </nav>
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <div id="processing"><div class="spinner-border" role="status"></div></div>
+
+  <script>
+    $(function () { ko.applyBindings(model); });
+  </script>
+</body>
+</html>
